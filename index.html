@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Xorax Apps</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      --card-bg: rgba(15, 20, 40, 0.8);
+      --text-color: #e0e0ff;
+      --primary-color: #00f0ff;
+      --primary-hover: #00c0ff;
+      --button-bg: rgba(40, 50, 80, 0.8);
+      --tag-bg: #7b00ff;
+      --shadow-color: rgba(0, 240, 255, 0.2);
+      --shadow-hover: rgba(0, 240, 255, 0.4);
+      --popup-bg: rgba(0, 0, 30, 0.9);
+      --new-badge-bg: #00ff88;
+      --new-badge-text: #002211;
+      --blue-glow: rgba(0, 240, 255, 0.6);
+      --purple-glow: rgba(123, 0, 255, 0.6);
+      --grey-accent: #606080;
+      --cyber-pink: #ff0099;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--background);
+      color: var(--text-color);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* Simplified animations */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      background: rgba(15, 20, 40, 0.7);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+      z-index: 100;
+      border-bottom: 1px solid var(--primary-color);
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .menu-icon {
+      padding: 10px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      border-radius: 50%;
+      background: rgba(0, 240, 255, 0.1);
+      border: 1px solid var(--primary-color);
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+    }
+
+    .menu-icon img {
+      width: 24px;
+      height: 24px;
+      vertical-align: middle;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .menu-icon:hover {
+      transform: rotate(90deg);
+    }
+    .menu-icon.open {
+      animation: spinFast 0.4s linear;
+    }
+
+    @keyframes spinFast {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 10px 20px;
+      border: 1px solid var(--primary-color);
+      border-radius: 30px;
+      max-width: 280px;
+      margin-left: 15px;
+      background: rgba(0, 0, 30, 0.5);
+      color: var(--text-color);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      outline-offset: 2px;
+    }
+
+    .search-input:focus {
+      animation: flicker 0.1s infinite;
+      outline: none;
+    }
+
+    @keyframes flicker {
+      0%, 100% { border-color: var(--primary-color); }
+      50% { border-color: var(--tag-bg); }
+    }
+
+    h2 {
+      text-align: center;
+      margin: 30px 20px;
+      color: var(--primary-color);
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px var(--blue-glow);
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    .category-buttons {
+      text-align: center;
+      margin: 20px 10px;
+    }
+
+    .category-buttons button {
+      padding: 10px 18px;
+      margin: 6px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      background: var(--button-bg);
+      color: var(--text-color);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      user-select: none;
+    }
+
+    .category-buttons button:hover {
+      transform: translateY(-3px);
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--primary-color);
+    }
+
+    .category-buttons .active {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(123, 0, 255, 0.2));
+      color: var(--primary-color);
+      transform: scale(1.05);
+      border: 1px solid var(--primary-color);
+      animation: crazyPulse 1.2s infinite;
+    }
+
+    .app-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .app-card {
+      width: 160px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      padding: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(0, 240, 255, 0.2);
+      animation: fadeIn 0.5s ease-out;
+      animation-fill-mode: both;
+      animation-delay: calc(var(--order) * 0.1s);
+      user-select: none;
+    }
+
+    .app-card:nth-child(1) { --order: 1; }
+    .app-card:nth-child(2) { --order: 2; }
+    .app-card:nth-child(3) { --order: 3; }
+    .app-card:nth-child(4) { --order: 4; }
+    .app-card:nth-child(5) { --order: 5; }
+    .app-card:nth-child(6) { --order: 6; }
+    .app-card:nth-child(7) { --order: 7; }
+    .app-card:nth-child(8) { --order: 8; }
+
+    @keyframes jitter {
+      0%, 100% { transform: translate(0) rotate(0); }
+      20% { transform: translate(-2px, 2px) rotate(-2deg); }
+      40% { transform: translate(2px, -2px) rotate(2deg); }
+      60% { transform: translate(-2px, 2px) rotate(-2deg); }
+      80% { transform: translate(2px, -2px) rotate(2deg); }
+    }
+
+    .app-card:hover {
+      animation: jitter 0.2s infinite;
+      border-color: var(--primary-hover);
+      box-shadow: 0 12px 30px var(--shadow-hover), 0 0 15px var(--tag-bg);
+      transform: scale(1.05) translateY(-5px);
+    }
+
+    .app-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 20px;
+      object-fit: cover;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(0, 240, 255, 0.3);
+      user-select: none;
+    }
+
+    .app-card:hover img {
+      transform: scale(1.05);
+      border: 2px solid var(--primary-color);
+    }
+
+    .app-card > div:first-of-type {
+      margin: 12px 0 8px;
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--primary-color);
+      user-select: text;
+    }
+
+    .tags {
+      margin-top: 10px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--tag-bg);
+      color: white;
+      font-size: 11px;
+      padding: 4px 8px;
+      margin: 4px;
+      border-radius: 6px;
+      font-weight: 600;
+      user-select: none;
+    }
+
+    .new-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--new-badge-bg);
+      color: var(--new-badge-text);
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 20px;
+      font-weight: 700;
+      animation: pulse 1.5s infinite;
+      user-select: none;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    /* Enhanced Popup Styling */
+    .popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--popup-bg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeIn 0.3s ease;
+      backdrop-filter: blur(5px);
+      user-select: none;
+    }
+
+    .popup-content {
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      color: var(--text-color);
+      animation: scaleIn 0.3s ease-out;
+      border: 1px solid var(--primary-color);
+      box-shadow: 0 0 30px var(--blue-glow);
+      position: relative;
+      overflow: hidden;
+      user-select: text;
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .popup-content img {
+      width: 120px;
+      height: 120px;
+      border-radius: 25px;
+      border: 2px solid var(--primary-color);
+      margin-bottom: 15px;
+      user-select: none;
+    }
+
+    .popup-content h3 {
+      margin: 15px 0 10px;
+      font-family: 'Orbitron', sans-serif;
+      color: var(--primary-color);
+      font-size: 22px;
+      user-select: text;
+    }
+
+    .popup-content p {
+      font-size: 15px;
+      line-height: 1.5;
+      margin: 15px 0;
+      user-select: text;
+    }
+
+    /* Screenshot container with smaller images */
+    .screenshot-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 15px;
+      margin: 20px 0;
+      padding: 10px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary-color) var(--card-bg);
+      border-radius: 10px;
+      background: rgba(0, 0, 30, 0.5);
+      user-select: none;
+    }
+
+    .screenshot-container img {
+      width: 120px;
+      height: 70px;
+      border-radius: 10px;
+      object-fit: cover;
+      scroll-snap-align: start;
+      transition: transform 0.3s ease;
+      border: 2px solid rgba(0, 240, 255, 0.3);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .screenshot-container img:hover {
+      transform: scale(1.05);
+      border: 2px solid var(--primary-color);
+    }
+
+    /* Download Button */
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--primary-color), var(--tag-bg));
+      color: #111;
+      padding: 12px 25px;
+      border-radius: 30px;
+      margin: 10px 5px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border: none;
+      box-shadow: 0 4px 15px rgba(0, 240, 255, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-family: 'Rajdhani', sans-serif;
+      cursor: pointer;
+      user-select: none;
+      animation: crazyPulse 1.2s infinite;
+    }
+
+    .download-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px var(--blue-glow);
+    }
+
+    .download-btn svg {
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+      margin-right: 6px;
+      fill: #111;
+      transition: transform 0.3s ease;
+      user-select: none;
+    }
+
+    .download-btn:active svg {
+      transform: scale(1.3);
+    }
+
+    .download-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--cyber-pink);
+      color: white;
+      font-size: 10px;
+      padding: 3px 6px;
+      border-radius: 10px;
+      animation: bounce 2s infinite;
+      user-select: none;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    @keyframes crazyPulse {
+      0% { box-shadow: 0 0 8px var(--primary-color); }
+      50% { box-shadow: 0 0 20px var(--tag-bg); }
+      100% { box-shadow: 0 0 8px var(--primary-color); }
+    }
+
+    /* Enhanced Side Menu */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 280px;
+      height: 100%;
+      background: var(--card-bg);
+      box-shadow: -5px 0 30px rgba(0, 0, 0, 0.5);
+      padding: 30px;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+      z-index: 9999;
+      backdrop-filter: blur(10px);
+      border-left: 1px solid var(--primary-color);
+      overflow-y: auto;
+      user-select: none;
+    }
+
+    .side-menu.open {
+      transform: translateX(0);
+    }
+
+    .side-profile {
+      text-align: center;
+      margin-bottom: 30px;
+      user-select: none;
+    }
+
+    .side-profile img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid var(--primary-color);
+      margin-bottom: 15px;
+      user-select: none;
+    }
+
+    .side-profile h4 {
+      margin: 15px 0;
+      font-family: 'Orbitron', sans-serif;
+      color: var(--primary-color);
+      user-select: text;
+    }
+
+    .side-menu a {
+      display: block;
+      padding: 15px;
+      margin: 12px 0;
+      border-radius: 10px;
+      text-decoration: none;
+      color: var(--text-color);
+      background: rgba(40, 50, 80, 0.5);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      font-weight: 600;
+      user-select: text;
+      cursor: pointer;
+    }
+
+    .side-menu a:hover {
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--primary-color);
+      transform: translateX(5px);
+    }
+
+    #overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--popup-bg);
+      z-index: 9998;
+      animation: fadeIn 0.3s ease;
+      user-select: none;
+    }
+
+    /* Broadcast Modal Overlay */
+    .broadcast-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 9998;
+      backdrop-filter: blur(4px);
+    }
+
+    /* Broadcast dialog styled popup */
+    .broadcast-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 300px;
+      max-width: 90vw;
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 24px 30px;
+      color: var(--text-color);
+      font-weight: 700;
+      font-family: 'Rajdhani', sans-serif;
+      box-shadow: 0 0 30px var(--blue-glow);
+      z-index: 10000;
+      user-select: text;
+      animation: scaleIn 0.3s ease forwards;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    /* Close button inside broadcast dialog */
+    .broadcast-close-btn {
+      align-self: flex-end;
+      background: var(--tag-bg);
+      border: none;
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      line-height: 1;
+      transition: background 0.3s ease;
+    }
+
+    .broadcast-close-btn:hover {
+      background: var(--primary-color);
+    }
+
+    /* Broadcast popup image style */
+    .broadcast-popup img {
+      max-width: 100%;
+      border-radius: 12px;
+      user-select: none;
+    }
+
+    /* Broadcast popup button style */
+    .broadcast-popup button.broadcast-action-btn {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border-radius: 20px;
+      border: none;
+      background: var(--primary-color);
+      color: #111;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      align-self: center;
+      user-select: none;
+      transition: background 0.3s ease;
+    }
+
+    .broadcast-popup button.broadcast-action-btn:hover {
+      background: var(--tag-bg);
+    }
+
+    @keyframes scaleIn {
+      from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .app-list {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      }
+      
+      .app-card {
+        width: 140px;
+      }
+      
+      .side-menu {
+        width: 250px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .app-list {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      }
+      
+      .app-card {
+        width: 120px;
+        padding: 12px;
+      }
+      
+      .app-card img {
+        width: 80px;
+        height: 80px;
+      }
+    }
+
+    /* Loading spinner animation */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    #loadingSpinner {
+      text-align: center;
+      margin: 30px auto;
+      color: var(--primary-color);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      user-select:none;
+      font-size: 18px;
+    }
+
+    #loadingSpinner::before {
+      content: "";
+      display: inline-block;
+      margin-right: 10px;
+      vertical-align: middle;
+      width: 20px;
+      height: 20px;
+      border: 3px solid var(--primary-color);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  </style>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7413304237286701"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="menu-icon" onclick="toggleMenu()">
+      <img src="https://i.ibb.co/5Wnq7Z00/file-63.jpg" alt="Menu Icon" />
+    </div>
+    <input type="text" id="searchInput" class="search-input" placeholder="Search apps..." />
+  </div>
+
+  <!-- Loading spinner shown while fetching apps -->
+  <div id="loadingSpinner">Loading apps...</div>
+  
+  <h2>Xorax Mods</h2>
+  
+  <div class="category-buttons">
+    <button class="active" data-category="All">All</button>
+    <button data-category="App">App</button>
+    <button data-category="Game">Game</button>
+    <button data-category="Paid App">Paid App</button>
+  </div>
+  
+  <div class="app-list" id="appList"></div>
+  
+  <div class="side-menu" id="sideMenu">
+    <div class="side-profile">
+      <img src="https://i.ibb.co/5xGXXKkx/file-61.jpg" alt="Profile" />
+      <h4>Xorax Team</h4>
+    </div>
+    <a href="https://t.me/xorax_team" target="_blank" rel="noopener noreferrer">📢 Official Channel</a>
+    <a href="https://t.me/share/url?url=https://t.me/xorax_team" target="_blank" rel="noopener noreferrer">📤 Dm for promotion</a>
+    <a href="#" onclick="toggleTheme()">🌓 Toggle Theme</a>
+    <a href="#" onclick="toggleNotifications()" id="notificationLink">🔔 New App Notice</a>
+    <a href="#" onclick="copyWebURL()">📋 Copy Web URL</a>
+  </div>
+  
+  <div id="overlay" onclick="closeMenu()"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script>
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZPjVMiMlWjuQBSKmkLwkyl38-MTwcCEI",
+      authDomain: "broadcasthkdk.firebaseapp.com",
+      projectId: "broadcasthkdk"
+    };
+    
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+
+    // DOM elements
+    const appList = document.getElementById("appList");
+    const searchInput = document.getElementById("searchInput");
+    const loadingSpinner = document.getElementById("loadingSpinner");
+    let selectedCategory = "All";
+    let apps = [];
+
+    // Show spinner before loading data
+    loadingSpinner.style.display = "block";
+
+    // Render apps list
+    function renderApps() {
+      loadingSpinner.style.display = "block";
+
+      setTimeout(() => { // small delay to show spinner briefly
+        const search = searchInput.value.toLowerCase();
+        const filtered = apps.filter(app =>
+          (selectedCategory === "All" || app.category === selectedCategory) &&
+          app.name.toLowerCase().includes(search)
+        );
+        
+        const lastSeen = parseInt(localStorage.getItem("lastAppTimestamp") || "0", 10);
+        const isNewAppNoticeEnabled = localStorage.getItem("newAppNotice") === "true";
+        
+        const fragment = document.createDocumentFragment();
+        
+        filtered.forEach((app, index) => {
+          const isNew = isNewAppNoticeEnabled && (app.created?.toMillis?.() || Date.now()) > lastSeen;
+          const card = document.createElement("div");
+          card.className = "app-card";
+          card.style.setProperty('--order', index + 1);
+          card.innerHTML = `
+            <img src="${app.image}" alt="${app.name}" loading="lazy" />
+            <div>${app.name}</div>
+            <div class="tags">
+              ${app.mod ? '<span class="tag">MOD</span>' : ''}
+              ${app.coins ? '<span class="tag">💰 Coins</span>' : ''}
+              ${app.premium ? '<span class="tag">⭐ Premium</span>' : ''}
+              ${app.ads ? '<span class="tag">🚫 Ads</span>' : ''}
+            </div>
+            ${isNew ? '<span class="new-badge">New</span>' : ''}
+          `;
+          card.onclick = () => showAppDetails(app, isNew, lastSeen);
+          fragment.appendChild(card);
+        });
+        
+        appList.innerHTML = '';
+        appList.appendChild(fragment);
+
+        loadingSpinner.style.display = "none";
+      }, 200);
+    }
+
+    // Show app details popup
+    function showAppDetails(app, isNew, lastSeen) {
+      const popup = document.createElement("div");
+      popup.className = "popup";
+      
+      const tags = `
+        ${app.mod ? '<span class="tag">MOD</span>' : ''}
+        ${app.coins ? '<span class="tag">💰 Coins</span>' : ''}
+        ${app.premium ? '<span class="tag">⭐ Premium</span>' : ''}
+        ${app.ads ? '<span class="tag">🚫 Ads</span>' : ''}
+      `;
+      
+      let screenshotHTML = '';
+      if (app.screenshot) {
+        const screenshots = Array.isArray(app.screenshot) ? app.screenshot : [app.screenshot];
+        screenshotHTML = `
+          <div class="screenshot-container">
+            ${screenshots.map(src => `<img src="${src}" loading="lazy" alt="Screenshot" />`).join('')}
+          </div>
+        `;
+      }
+      
+      popup.innerHTML = `
+        <div class="popup-content">
+          <img src="${app.image}" alt="${app.name}" loading="lazy" />
+          <h3>${app.name}</h3>
+          ${tags}
+          <p>${app.desc || ''}</p>
+          ${app.textLink ? `<p><a href="${app.textLink}" target="_blank" style="color:var(--primary-color); user-select: text;">🔗 View on Play Store</a></p>` : ''}
+          ${screenshotHTML}
+          <a href="${app.link}" class="download-btn" target="_blank" rel="noopener noreferrer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M5 20h14v-2H5v2zm7-18l-5 5h3v6h4v-6h3l-5-5z"/>
+            </svg>
+            Download
+            <span class="download-badge">↓</span>
+          </a>
+          <button onclick="this.closest('.popup').remove()" style="margin-top:12px; padding: 8px 18px; border-radius: 20px; border:none; background: var(--primary-color); color:#111; cursor:pointer; font-weight:700; font-family: 'Rajdhani', sans-serif;">
+            Close
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(popup);
+      
+      if (isNew) {
+        const appTimestamp = app.created?.toMillis?.() || Date.now();
+        if (appTimestamp > lastSeen) {
+          localStorage.setItem("lastAppTimestamp", appTimestamp.toString());
+          renderApps();
+        }
+      }
+      
+      const downloadBtn = popup.querySelector('.download-btn');
+      if (downloadBtn) {
+        downloadBtn.addEventListener('click', function() {
+          this.style.transform = 'scale(0.95)';
+          setTimeout(() => {
+            this.style.transform = 'scale(1.05)';
+          }, 100);
+        });
+      }
+    }
+
+    // Side menu toggle
+    function toggleMenu() {
+      const menu = document.getElementById("sideMenu");
+      const overlay = document.getElementById("overlay");
+      const menuIcon = document.querySelector('.menu-icon');
+      menu.classList.toggle("open");
+      overlay.style.display = menu.classList.contains("open") ? "block" : "none";
+
+      if(menu.classList.contains("open")) {
+        menuIcon.classList.add("open");
+        setTimeout(() => menuIcon.classList.remove("open"), 400);
+      }
+    }
+    function closeMenu() {
+      document.getElementById("sideMenu").classList.remove("open");
+      document.getElementById("overlay").style.display = "none";
+    }
+
+    // Theme toggle
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute("data-theme") || "light";
+      const newTheme = currentTheme === "light" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", newTheme);
+      localStorage.setItem("theme", newTheme);
+    }
+
+    const savedTheme = localStorage.getItem("theme") || "light";
+    document.documentElement.setAttribute("data-theme", savedTheme);
+
+    // Notification toggle
+    function toggleNotifications() {
+      const isNewAppNoticeEnabled = localStorage.getItem("newAppNotice") === "true";
+      localStorage.setItem("newAppNotice", !isNewAppNoticeEnabled);
+      renderApps();
+    }
+
+    // Copy web URL
+    function copyWebURL() {
+      navigator.clipboard.writeText(window.location.href)
+        .then(() => alert('Web URL copied to clipboard!'))
+        .catch(() => alert('Failed to copy URL.'));
+    }
+
+    // Category button event listeners
+    document.querySelectorAll(".category-buttons button").forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll(".category-buttons button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedCategory = btn.dataset.category;
+        renderApps();
+      });
+    });
+
+    // Search input event listener
+    searchInput.addEventListener("input", () => {
+      clearTimeout(searchInput.timer);
+      searchInput.timer = setTimeout(renderApps, 300);
+    });
+
+    // Load app data from Firestore
+    db.collection("apps").orderBy("created", "desc").onSnapshot(snapshot => {
+      apps = snapshot.docs.map(doc => doc.data());
+      
+      // Hide spinner after data is ready
+      loadingSpinner.style.display = "none";
+
+      renderApps();
+    });
+
+    // Close popup on ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const popup = document.querySelector('.popup');
+        if (popup) popup.remove();
+        else closeMenu();
+      }
+    });
+
+    // Confetti effect on download click
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.download-btn')) {
+        burstConfetti(e.target.closest('.download-btn'));
+      }
+    });
+
+    function burstConfetti(element) {
+      const colors = ['#00f0ff', '#7b00ff', '#00ff88'];
+      const rect = element.getBoundingClientRect();
+      
+      for(let i=0; i<15; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.width = '6px';
+        confetti.style.height = '6px';
+        confetti.style.background = colors[Math.floor(Math.random()*colors.length)];
+        confetti.style.borderRadius = '50%';
+        confetti.style.left = (rect.left + rect.width/2 + (Math.random()*80 - 40)) + 'px';
+        confetti.style.top = (rect.top + rect.height/2 + (Math.random()*80 - 40)) + 'px';
+        confetti.style.pointerEvents = 'none';
+        confetti.style.zIndex = '10000';
+        confetti.style.opacity = '1';
+        confetti.style.transition = 'all 0.8s ease-out';
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => {
+          confetti.style.left = (parseFloat(confetti.style.left) + (Math.random()*100 - 50)) + 'px';
+          confetti.style.top = (parseFloat(confetti.style.top) - 100) + 'px';
+          confetti.style.opacity = '0';
+        }, 10);
+        setTimeout(() => document.body.removeChild(confetti), 900);
+      }
+    }
+
+    // --- BROADCAST MODAL POPUP IMPLEMENTATION WITH COUNTDOWN ---
+
+    const broadcastCollection = db.collection('broadcasts');
+    const shownBroadcasts = new Set();
+
+    broadcastCollection
+      .where('expiresAt', '>', firebase.firestore.Timestamp.now())
+      .orderBy('expiresAt', 'asc')
+      .orderBy('created', 'desc')
+      .onSnapshot(snapshot => {
+        snapshot.docChanges().forEach(change => {
+          if (change.type === 'added') {
+            const data = change.doc.data();
+            const id = change.doc.id;
+
+            if (!shownBroadcasts.has(id)) {
+              shownBroadcasts.add(id);
+              // Pass optional fields for image and button
+              showBroadcastPopup(
+                data.text,
+                data.expiresAt.toMillis(),
+                id,
+                data.imageUrl,
+                data.buttonText,
+                data.buttonUrl
+              );
+            }
+          }
+        });
+      });
+
+    function showBroadcastPopup(text, expiresAtMs, broadcastId, imageUrl = null, buttonText = null, buttonUrl = null) {
+      // Create overlay
+      const overlay = document.createElement('div');
+      overlay.className = 'broadcast-overlay';
+
+      // Create popup dialog
+      const popup = document.createElement('div');
+      popup.className = 'broadcast-popup';
+
+      // Close button
+      const closeBtn = document.createElement('button');
+      closeBtn.className = 'broadcast-close-btn';
+      closeBtn.innerHTML = '&times;';
+      popup.appendChild(closeBtn);
+
+      // Image (if provided)
+      if (imageUrl) {
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.alt = 'Broadcast Image';
+        popup.appendChild(img);
+      }
+
+      // Message content
+      const message = document.createElement('div');
+      message.textContent = text;
+      popup.appendChild(message);
+
+      // Countdown timer element
+      const countdown = document.createElement('div');
+      countdown.style.marginTop = '8px';
+      countdown.style.fontSize = '14px';
+      countdown.style.fontWeight = '600';
+      countdown.style.color = 'var(--primary-color)';
+      popup.appendChild(countdown);
+
+      // Button (if provided)
+      if (buttonText && buttonUrl) {
+        const btn = document.createElement('button');
+        btn.className = 'broadcast-action-btn';
+        btn.textContent = buttonText;
+        btn.onclick = () => {
+          window.open(buttonUrl, '_blank', 'noopener');
+        };
+        popup.appendChild(btn);
+      }
+
+      // Append overlay and popup
+      document.body.appendChild(overlay);
+      document.body.appendChild(popup);
+
+      // Format milliseconds into HH:MM:SS or MM:SS
+      function formatTime(ms) {
+        if (ms <= 0) return '00:00';
+        let totalSeconds = Math.floor(ms / 1000);
+        const hours = Math.floor(totalSeconds / 3600);
+        totalSeconds %= 3600;
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+
+        if (hours > 0) {
+          return `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+        }
+        return `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+      }
+
+      // Update countdown text every second
+      function updateCountdown() {
+        const now = Date.now();
+        const diff = expiresAtMs - now;
+        if (diff <= 0) {
+          countdown.textContent = `Expired`;
+          dismiss();
+          return;
+        }
+        countdown.textContent = `Ads will expire in ${formatTime(diff)}`;
+      }
+
+      const countdownInterval = setInterval(updateCountdown, 1000);
+      updateCountdown(); // Initial call to display immediately
+
+      // Function to remove popup and overlay and clear tracking
+      function dismiss() {
+        clearInterval(countdownInterval);
+        if (popup.parentElement) popup.remove();
+        if (overlay.parentElement) overlay.remove();
+        shownBroadcasts.delete(broadcastId);
+      }
+
+      // Close on close button click
+      closeBtn.onclick = dismiss;
+
+      // Close on clicking overlay behind popup
+      overlay.onclick = dismiss;
+
+      // Also dismiss on expire or 10 seconds max
+      const now = Date.now();
+      const timeoutDuration = Math.min(expiresAtMs - now, 10000);
+
+      if (timeoutDuration > 0) {
+        setTimeout(() => {
+          dismiss();
+        }, timeoutDuration);
+      } else {
+        dismiss();
+      }
+    }
+  </script>
+</body>
+</html>
